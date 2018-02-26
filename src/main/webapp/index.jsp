@@ -35,6 +35,10 @@
     <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-edit" plain="true"
        onclick="editUser()">编辑用户</a>
     <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-remove" plain="true" onclick="destroyUser()">删除用户</a>
+
+    关键字：<input class="easyui-textbox" type="text" name="key" style="width:150px"/>
+    <a href="#" class="easyui-linkbutton" iconCls="icon-search" plain="true" onclick="searchkey()">查询</a>
+
 </div>
 
 <div id="dlg" class="easyui-dialog" style="width:400px"
@@ -109,6 +113,12 @@
                     });
                 }
             }
+        });
+    }
+    
+    function searchkey() {
+        $('#dg').datagrid('load', {
+            key: $('input[name="key"]').val(),
         });
     }
 

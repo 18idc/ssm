@@ -10,14 +10,7 @@ public class Condition implements Serializable {
     private static final long serialVersionUID = -2693013603271215065L;
     private Integer page;
     private Integer rows;
-
-    public Condition() {
-    }
-
-    public Condition(Integer page, Integer rows) {
-        this.page = page;
-        this.rows = rows;
-    }
+    private String key;
 
     public Integer getPage() {
         return page;
@@ -35,4 +28,11 @@ public class Condition implements Serializable {
         this.rows = rows;
     }
 
+    public String getKey() {
+        return key;
+    }
+
+    public void setKey(String key) {
+        this.key = key;
+    }
 }

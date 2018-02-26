@@ -43,8 +43,22 @@ public class UserServiceImpl implements UserService {
                 rows = user.getRows();
             }
 
+            String key = user.getKey();
+
+            List<User> userList = null;
+
             PageHelper.startPage(page, rows);
-            List<User> userList = userMapper.selectByExample(null);
+
+            if(MyUtils.isEmpty(key)){
+                //查询全部
+                userList = userMapper.selectByExample(null);
+            }else {
+                UserExample userExample = new UserExample();
+                UserExample.Criteria criteria = userExample.createCriteria();
+                criteria.andUsernameLike(key);
+                userList = userMapper.selectByExample(userExample);
+            }
+
             return userList;
         }
         return null;
