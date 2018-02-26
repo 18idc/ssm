@@ -49,15 +49,19 @@ public class UserServiceImpl implements UserService {
 
             PageHelper.startPage(page, rows);
 
+            //根据关键字搜索
+            UserExample userExample = new UserExample();
+            UserExample.Criteria criteria = userExample.createCriteria();
+            criteria.andUsernameLike("%"+key+"%");
+            userExample.or().andPhoneLike("%"+key+"%");
+            userExample.or().andEmailLike("%"+key+"%");
+
+            //查询全部
             if(MyUtils.isEmpty(key)){
-                //查询全部
-                userList = userMapper.selectByExample(null);
-            }else {
-                UserExample userExample = new UserExample();
-                UserExample.Criteria criteria = userExample.createCriteria();
-                criteria.andUsernameLike(key);
-                userList = userMapper.selectByExample(userExample);
+                userExample = null;
             }
+
+            userList = userMapper.selectByExample(userExample);
 
             return userList;
         }
