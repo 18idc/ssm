@@ -14,6 +14,9 @@
     <script type="text/javascript" src="${pageContext.request.contextPath}/echarts/echarts.min.js"></script>
 </head>
 <body>
+<a href="#">一对一</a> <hr/>
+<a href="#">一对多</a> <hr/>
+<a href="#">多对多</a> <hr/>
 
 <table id="dg" title="用户管理" class="easyui-datagrid" style="width:100%;height:600px"
        url="${pageContext.request.contextPath}/user/list"
@@ -193,6 +196,7 @@
     });
 
 </script>
+
 
 </body>
 </html>
