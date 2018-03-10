@@ -2,7 +2,10 @@ package com.q18idc.ssm.service.impl;
 
 import com.alibaba.druid.util.StringUtils;
 import com.github.pagehelper.PageHelper;
+import com.q18idc.ssm.dao.ClassesMapper;
 import com.q18idc.ssm.dao.UserMapper;
+import com.q18idc.ssm.entity.Classes;
+import com.q18idc.ssm.entity.ClassesExample;
 import com.q18idc.ssm.entity.User;
 import com.q18idc.ssm.entity.UserExample;
 import com.q18idc.ssm.service.UserService;
@@ -22,6 +25,9 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private UserMapper userMapper;
+
+    @Autowired
+    private ClassesMapper classesMapper;
 
     /**
      * 分页获取用户列表
@@ -52,12 +58,12 @@ public class UserServiceImpl implements UserService {
             //根据关键字搜索
             UserExample userExample = new UserExample();
             UserExample.Criteria criteria = userExample.createCriteria();
-            criteria.andUsernameLike("%"+key+"%");
-            userExample.or().andPhoneLike("%"+key+"%");
-            userExample.or().andEmailLike("%"+key+"%");
+            criteria.andUsernameLike("%" + key + "%");
+            userExample.or().andPhoneLike("%" + key + "%");
+            userExample.or().andEmailLike("%" + key + "%");
 
             //查询全部
-            if(MyUtils.isEmpty(key)){
+            if (MyUtils.isEmpty(key)) {
                 userExample = null;
             }
 
@@ -104,7 +110,7 @@ public class UserServiceImpl implements UserService {
 //            }
 
             //判断输入的是否是正确的邮箱
-            if(MyUtils.isEmail(user.getEmail()) == false){
+            if (MyUtils.isEmail(user.getEmail()) == false) {
                 return "请输入正确的邮箱";
             }
 
@@ -171,5 +177,28 @@ public class UserServiceImpl implements UserService {
             return (int) userMapper.countByExample(userExample);
         }
         return 0;
+    }
+
+    /**
+     * 一对一查询 查询出班级下的老师  假设一个班只能有一个老师来教
+     *
+     * @param classes
+     * @return
+     */
+    @Override
+    public List<Classes> classesOneToOne(Classes classes) {
+        if (classes != null) {
+            ClassesExample classesExample = new ClassesExample();
+            if (MyUtils.isNotEmpty(classes.getCname())) {
+                //关键字搜索
+                ClassesExample.Criteria criteria = classesExample.createCriteria();
+                criteria.andCnameLike("%"+classes.getCname()+"%");
+            }else {
+                //查询全部
+                classesExample = null;
+            }
+            return classesMapper.selectOneToOne(classesExample);
+        }
+        return null;
     }
 }

@@ -145,7 +145,7 @@
     }
 </script>
 <hr>
-<a class="easyui-linkbutton" iconCls="icon-search"  href="${pageContext.request.contextPath}/admin">一对一</a>
+<a class="easyui-linkbutton" iconCls="icon-search"  href="${pageContext.request.contextPath}/user/OneToOne">一对一</a>
 <a class="easyui-linkbutton" iconCls="icon-search"  href="#">一对多</a>
 <a class="easyui-linkbutton" iconCls="icon-search"  href="#">多对多</a>
 <hr>

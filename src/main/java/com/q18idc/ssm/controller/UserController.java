@@ -1,6 +1,7 @@
 package com.q18idc.ssm.controller;
 
 import com.github.pagehelper.PageInfo;
+import com.q18idc.ssm.entity.Classes;
 import com.q18idc.ssm.entity.Result;
 import com.q18idc.ssm.entity.ResultJson;
 import com.q18idc.ssm.entity.User;
@@ -86,6 +87,10 @@ public class UserController {
         return json;
     }
 
+    /**
+     * 性别统计
+     * @return
+     */
     @RequestMapping(value = {"sex"})
     @ResponseBody
     public List<Map<Object, Object>> sex() {
@@ -102,5 +107,18 @@ public class UserController {
         mapList.add(map2);
         return mapList;
     }
+
+    /**
+     * 一对一查询 查询出班级下的老师  假设一个班只能有一个老师来教
+     * @return
+     */
+    @RequestMapping(value = {"OneToOne"})
+    @ResponseBody
+    public List<Classes> OneToOne(){
+        Classes classes = new Classes();
+        classes.setCname("软件");
+        return userService.classesOneToOne(classes);
+    }
+
 
 }

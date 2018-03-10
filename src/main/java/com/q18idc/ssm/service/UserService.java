@@ -1,5 +1,6 @@
 package com.q18idc.ssm.service;
 
+import com.q18idc.ssm.entity.Classes;
 import com.q18idc.ssm.entity.User;
 
 import java.util.List;
@@ -36,4 +37,11 @@ public interface UserService {
      * @return 统计数量
      */
     Integer sexCount(String sex);
+
+    /**
+     * 一对一查询 查询出班级下的老师  假设一个班只能有一个老师来教
+     * @param classes
+     * @return
+     */
+    List<Classes> classesOneToOne(Classes classes);
 }
