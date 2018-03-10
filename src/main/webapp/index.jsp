@@ -14,9 +14,6 @@
     <script type="text/javascript" src="${pageContext.request.contextPath}/echarts/echarts.min.js"></script>
 </head>
 <body>
-<a href="#">一对一</a> <hr/>
-<a href="#">一对多</a> <hr/>
-<a href="#">多对多</a> <hr/>
 
 <table id="dg" title="用户管理" class="easyui-datagrid" style="width:100%;height:600px"
        url="${pageContext.request.contextPath}/user/list"
@@ -147,9 +144,12 @@
         }
     }
 </script>
-
 <hr>
-<button id="shuaxin">获取统计</button>
+<a class="easyui-linkbutton" iconCls="icon-search"  href="${pageContext.request.contextPath}/admin">一对一</a>
+<a class="easyui-linkbutton" iconCls="icon-search"  href="#">一对多</a>
+<a class="easyui-linkbutton" iconCls="icon-search"  href="#">多对多</a>
+<hr>
+<button id="shuaxin" class="easyui-linkbutton" iconCls="icon-reload">获取统计</button>
 <div id="main" style="width: 600px;height:400px;"></div>
 <script type="text/javascript">
     $("#shuaxin").click(function () {
