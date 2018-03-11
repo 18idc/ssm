@@ -1,20 +1,19 @@
 package com.q18idc.ssm.controller;
 
 import com.github.pagehelper.PageInfo;
-import com.q18idc.ssm.entity.Classes;
-import com.q18idc.ssm.entity.Result;
-import com.q18idc.ssm.entity.ResultJson;
-import com.q18idc.ssm.entity.User;
+import com.q18idc.ssm.entity.*;
 import com.q18idc.ssm.service.UserService;
+import org.hswebframework.expands.office.excel.ExcelIO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
+import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import javax.servlet.http.HttpServletRequest;
+import java.util.*;
 
 /**
  * User控制器
@@ -120,6 +119,10 @@ public class UserController {
         return userService.classesOneToOne(classes);
     }
 
+    /**
+     * 一对多查询  查询指定班级下的所有学生
+     * @return
+     */
     @RequestMapping(value = {"OneToMany"})
     @ResponseBody
     public Classes OneToMany(){
@@ -128,5 +131,74 @@ public class UserController {
         return userService.classesOneToMany(classes);
     }
 
+    /**
+     * 多对多查询  根据用户ID获取用户组
+     * @return
+     */
+    @RequestMapping(value = {"ManyToMany"})
+    @ResponseBody
+    public List<Groups> ManyToMany(){
+        User user = new User();
+        user.setId(1);
+       return userService.selectManyToMany(user);
+    }
+
+    /**
+     * 文件上传  导入Excel
+     */
+    @RequestMapping(value = {"upload"})
+    @ResponseBody
+    public Map<String ,Object> upload(HttpServletRequest request) throws Exception {
+        Map<String ,Object> map = new HashMap<>();
+        int sun = 0;//总条数
+        int success = 0;//成功条数
+        int error = 0;//失败条数
+        //将当前上下文初始化给  CommonsMutipartResolver （多部分解析器）
+        CommonsMultipartResolver multipartResolver = new CommonsMultipartResolver(request.getSession().getServletContext());
+        //检查form中是否有enctype="multipart/form-data"
+        if (multipartResolver.isMultipart(request)) {
+            //将request变成多部分request
+            MultipartHttpServletRequest multiRequest = (MultipartHttpServletRequest) request;
+            //获取multiRequest 中所有的文件名
+            Iterator iter = multiRequest.getFileNames();
+            while (iter.hasNext()) {
+                //一次遍历所有文件
+                MultipartFile file = multiRequest.getFile(iter.next().toString());
+                if (file != null) {
+                    List<Map<String, Object>> list = ExcelIO.read2Map(file.getInputStream());
+                    sun = list.size();
+                    for (Map<String, Object> stringObjectMap : list) {
+                        User user  = new User();
+                        user.setUsername(stringObjectMap.get("用户名").toString());
+                        user.setPassword(stringObjectMap.get("密码").toString());
+                        user.setPhone(stringObjectMap.get("电话").toString());
+                        user.setEmail(stringObjectMap.get("邮箱").toString());
+                        user.setSex(stringObjectMap.get("性别").toString());
+                        user.setBirthday((Date) stringObjectMap.get("生日"));
+                        String s = userService.addUpdateUser(user);
+                        if(s.indexOf("成功") == -1){
+                            error++;
+                        }else {
+                            success++;
+                        }
+                    }
+                }
+            }
+            map.put("flag",true);
+            map.put("msg","总条数：" + sun + " 成功：" + success + "条 失败：" + error + "条");
+//            sun = 0;
+//            success = 0;
+//            error = 0;
+            return map;
+        } else {
+            map.put("flag",false);
+            map.put("msg","导入失败");
+//            sun = 0;
+//            success = 0;
+//            error = 0;
+            return map;
+        }
+
+    }
 
 }

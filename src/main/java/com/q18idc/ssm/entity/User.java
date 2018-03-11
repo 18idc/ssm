@@ -3,6 +3,7 @@ package com.q18idc.ssm.entity;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
+import java.util.Set;
 
 public class User extends Condition{
     private Integer id;
@@ -19,6 +20,16 @@ public class User extends Condition{
 
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date birthday;
+
+    private Set<Groups> groups;
+
+    public Set<Groups> getGroups() {
+        return groups;
+    }
+
+    public void setGroups(Set<Groups> groups) {
+        this.groups = groups;
+    }
 
     public Integer getId() {
         return id;

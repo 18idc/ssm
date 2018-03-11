@@ -1,6 +1,7 @@
 package com.q18idc.ssm.service;
 
 import com.q18idc.ssm.entity.Classes;
+import com.q18idc.ssm.entity.Groups;
 import com.q18idc.ssm.entity.User;
 
 import java.util.List;
@@ -51,4 +52,11 @@ public interface UserService {
      * @return
      */
     Classes classesOneToMany(Classes classes);
+
+    /**
+     * 多对多查询  根据用户ID获取用户组
+     * @param user
+     * @return
+     */
+    List<Groups> selectManyToMany(User user);
 }

@@ -12,6 +12,7 @@
     <script type="text/javascript" src="${pageContext.request.contextPath}/themes/jquery.insdep-extend.min.js"></script>
     <script type="text/javascript" src="${pageContext.request.contextPath}/js/easyui-lang-zh_CN.js"></script>
     <script type="text/javascript" src="${pageContext.request.contextPath}/echarts/echarts.min.js"></script>
+    <script type="text/javascript" src="${pageContext.request.contextPath}/js/ajaxfileupload.js"></script>
 </head>
 <body>
 
@@ -39,11 +40,14 @@
     关键字：<input class="easyui-textbox" type="text" name="key" style="width:150px"/>
     <a href="#" class="easyui-linkbutton" iconCls="icon-search" plain="true" onclick="searchkey()">查询</a>
 
+    <input type="file" id="file" name="file"  />
+    <a href="#" class="easyui-linkbutton" iconCls="icon-save" onclick="fileupload();"  style="margin-right: 18px;">上传</a>
+
 </div>
 
 <div id="dlg" class="easyui-dialog" style="width:400px"
      closed="true" buttons="#dlg-buttons">
-    <form id="fm" method="post" novalidate style="margin:0;padding:20px 50px">
+    <form id="fm" method="post" novalidate style="margin:0;padding:20px 50px" >
         <div style="margin-bottom:20px;font-size:14px;border-bottom:1px solid #ccc">用户信息</div>
         <div style="margin-bottom:10px">
             <input name="username" class="easyui-textbox" required="true"  label="用户名:" style="width:100%">
@@ -77,6 +81,32 @@
        onclick="javascript:$('#dlg').dialog('close')" style="width:90px">取消</a>
 </div>
 <script type="text/javascript">
+    function fileupload() {
+        if ($("#file").val() == "" ) {
+            $.messager.alert('提示', '请选择需要上传的Excel文件', "error", function () {
+            });
+            return;
+        }
+        $.ajaxFileUpload({
+            url: '${pageContext.request.contextPath}/user/upload',
+            secureuri: false,
+            fileElementId: 'file',
+            dataType: 'json',
+            success: function (data,status) {
+                $('#file').val('');
+                if (data.flag){
+                    $.messager.alert('成功', data.msg, "success", function () {});
+                }else {
+                    $.messager.alert('失败', data.msg, "error", function () {});
+                }
+                $('#dg').datagrid('reload');
+                $("#shuaxin").click();
+            }
+        });
+
+    }
+    
+    
     var url;
 
     function newUser() {
@@ -147,7 +177,7 @@
 <hr>
 <a class="easyui-linkbutton" iconCls="icon-search"  href="${pageContext.request.contextPath}/user/OneToOne">一对一</a>
 <a class="easyui-linkbutton" iconCls="icon-search"  href="${pageContext.request.contextPath}/user/OneToMany">一对多</a>
-<a class="easyui-linkbutton" iconCls="icon-search"  href="#">多对多</a>
+<a class="easyui-linkbutton" iconCls="icon-search"  href="${pageContext.request.contextPath}/user/ManyToMany">多对多</a>
 <hr>
 <button id="shuaxin" class="easyui-linkbutton" iconCls="icon-reload">获取统计</button>
 <div id="main" style="width: 600px;height:400px;"></div>

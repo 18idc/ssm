@@ -26,6 +26,13 @@
 
 
     <dependencies>
+
+        <dependency>
+            <groupId>org.hswebframework</groupId>
+            <artifactId>hsweb-expands-office</artifactId>
+            <version>3.0.0</version>
+        </dependency>
+
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
@@ -238,7 +245,7 @@
                 <groupId>org.mybatis.generator</groupId>
                 <artifactId>mybatis-generator-maven-plugin</artifactId>
                 <version>${mybatis.generator.version}</version>
-                
+
                 <dependencies>
                     <dependency>
                         <groupId>mysql</groupId>
@@ -246,7 +253,7 @@
                         <version>5.1.45</version>
                     </dependency>
                 </dependencies>
-                
+
                 <configuration>
                     <!--配置文件的路径-->
                     <configurationFile>${basedir}/src/main/resources/generatorConfig.xml</configurationFile>

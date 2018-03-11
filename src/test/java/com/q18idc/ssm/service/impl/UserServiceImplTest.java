@@ -1,10 +1,9 @@
 package com.q18idc.ssm.service.impl;
 
 import com.q18idc.ssm.dao.ClassesMapper;
-import com.q18idc.ssm.entity.Classes;
-import com.q18idc.ssm.entity.ClassesExample;
-import com.q18idc.ssm.entity.Student;
-import com.q18idc.ssm.entity.User;
+import com.q18idc.ssm.dao.GroupsMapper;
+import com.q18idc.ssm.dao.UserMapper;
+import com.q18idc.ssm.entity.*;
 import com.q18idc.ssm.service.UserService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -23,6 +22,12 @@ public class UserServiceImplTest {
 
     @Autowired
     private ClassesMapper classesMapper;
+
+    @Autowired
+    private GroupsMapper groupsMapper;
+
+    @Autowired
+    private UserMapper userMapper;
 
 
     @Test
@@ -64,6 +69,19 @@ public class UserServiceImplTest {
         Classes classes = classesMapper.selectOneToManyByCid(classes1);
         for (Student student : classes.getStudents()) {
             System.out.println(student.getSname());
+        }
+    }
+
+    /**
+     * 多对多查询  根据用户ID获取用户组
+     */
+    @Test
+    public void ManyToMany(){
+        User user = new User();
+        user.setId(1);
+        List<Groups> groups = userMapper.selectManyToMany(user);
+        for (Groups group : groups) {
+            System.out.println(group.getGname());
         }
     }
 }

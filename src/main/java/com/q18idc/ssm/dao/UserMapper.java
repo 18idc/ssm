@@ -1,5 +1,6 @@
 package com.q18idc.ssm.dao;
 
+import com.q18idc.ssm.entity.Groups;
 import com.q18idc.ssm.entity.User;
 import com.q18idc.ssm.entity.UserExample;
 import org.apache.ibatis.annotations.Param;
@@ -28,4 +29,6 @@ public interface UserMapper {
     int updateByPrimaryKeySelective(User record);
 
     int updateByPrimaryKey(User record);
+
+    List<Groups> selectManyToMany(User user);
 }

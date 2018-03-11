@@ -4,10 +4,7 @@ import com.alibaba.druid.util.StringUtils;
 import com.github.pagehelper.PageHelper;
 import com.q18idc.ssm.dao.ClassesMapper;
 import com.q18idc.ssm.dao.UserMapper;
-import com.q18idc.ssm.entity.Classes;
-import com.q18idc.ssm.entity.ClassesExample;
-import com.q18idc.ssm.entity.User;
-import com.q18idc.ssm.entity.UserExample;
+import com.q18idc.ssm.entity.*;
 import com.q18idc.ssm.service.UserService;
 import com.q18idc.ssm.utils.MyUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -211,6 +208,19 @@ public class UserServiceImpl implements UserService {
     public Classes classesOneToMany(Classes classes) {
         if(classes!=null){
             return classesMapper.selectOneToManyByCid(classes);
+        }
+        return null;
+    }
+
+    /**
+     * 多对多查询  根据用户ID获取用户组
+     * @param user
+     * @return
+     */
+    @Override
+    public List<Groups> selectManyToMany(User user) {
+        if(user!=null){
+            return userMapper.selectManyToMany(user);
         }
         return null;
     }
