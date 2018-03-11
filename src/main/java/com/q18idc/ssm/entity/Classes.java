@@ -1,5 +1,7 @@
 package com.q18idc.ssm.entity;
 
+import java.util.Set;
+
 public class Classes {
     private Integer cid;
 
@@ -8,6 +10,16 @@ public class Classes {
     private Integer tid;
 
     private Teacher teacher;
+
+    private Set<Student> students;
+
+    public Set<Student> getStudents() {
+        return students;
+    }
+
+    public void setStudents(Set<Student> students) {
+        this.students = students;
+    }
 
     public Teacher getTeacher() {
         return teacher;

@@ -120,5 +120,13 @@ public class UserController {
         return userService.classesOneToOne(classes);
     }
 
+    @RequestMapping(value = {"OneToMany"})
+    @ResponseBody
+    public Classes OneToMany(){
+        Classes classes = new Classes();
+        classes.setCid(1);
+        return userService.classesOneToMany(classes);
+    }
+
 
 }

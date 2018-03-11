@@ -31,4 +31,6 @@ public interface ClassesMapper {
 
 
     List<Classes> selectOneToOne(ClassesExample classesExample);
+
+    Classes selectOneToManyByCid(Classes classes);
 }

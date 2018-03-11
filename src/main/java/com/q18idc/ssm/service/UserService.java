@@ -44,4 +44,11 @@ public interface UserService {
      * @return
      */
     List<Classes> classesOneToOne(Classes classes);
+
+    /**
+     * 一对多查询 查询指定班级下的所有学生
+     * @param classes
+     * @return
+     */
+    Classes classesOneToMany(Classes classes);
 }

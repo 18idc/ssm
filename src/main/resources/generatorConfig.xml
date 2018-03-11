@@ -39,15 +39,11 @@
         </javaClientGenerator>
 
         <!-- 要生成哪些表 -->
-        <table tableName="classes" domainObjectName="Classes"
+        <table tableName="student" domainObjectName="Student"
                enableCountByExample="true" enableUpdateByExample="true"
                enableDeleteByExample="true" enableSelectByExample="true"
                selectByExampleQueryId="true"/>
 
-        <table tableName="teacher" domainObjectName="Teacher"
-               enableCountByExample="true" enableUpdateByExample="true"
-               enableDeleteByExample="true" enableSelectByExample="true"
-               selectByExampleQueryId="true"/>
 
 
     </context>

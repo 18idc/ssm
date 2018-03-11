@@ -201,4 +201,17 @@ public class UserServiceImpl implements UserService {
         }
         return null;
     }
+
+    /**
+     *  一对多查询 查询指定班级下的所有学生
+     * @param classes
+     * @return
+     */
+    @Override
+    public Classes classesOneToMany(Classes classes) {
+        if(classes!=null){
+            return classesMapper.selectOneToManyByCid(classes);
+        }
+        return null;
+    }
 }

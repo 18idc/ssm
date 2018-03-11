@@ -146,7 +146,7 @@
 </script>
 <hr>
 <a class="easyui-linkbutton" iconCls="icon-search"  href="${pageContext.request.contextPath}/user/OneToOne">一对一</a>
-<a class="easyui-linkbutton" iconCls="icon-search"  href="#">一对多</a>
+<a class="easyui-linkbutton" iconCls="icon-search"  href="${pageContext.request.contextPath}/user/OneToMany">一对多</a>
 <a class="easyui-linkbutton" iconCls="icon-search"  href="#">多对多</a>
 <hr>
 <button id="shuaxin" class="easyui-linkbutton" iconCls="icon-reload">获取统计</button>

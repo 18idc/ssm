@@ -15,6 +15,7 @@
             <result column="tname" property="tname" />
         </association>
     </resultMap>
+
     <select id="selectOneToOne" parameterType="com.q18idc.ssm.entity.ClassesExample" resultMap="OneToOne">
         select
         <if test="distinct">
@@ -36,6 +37,17 @@
         </if>
     </select>
 
+    <resultMap id="OneToMany" type="classes">
+        <id column="cid" jdbcType="INTEGER" property="cid"/>
+        <result column="cname" jdbcType="VARCHAR" property="cname"/>
+        <collection property="students" ofType="student">
+            <id column="sid" property="sid"/>
+            <result column="sname" property="sname"/>
+        </collection>
+    </resultMap>
+    <select id="selectOneToManyByCid" parameterType="classes" resultMap="OneToMany">
+        select * from classes c,student s where s.cid=c.cid and c.cid=#{cid}
+    </select>
 
 
     <sql id="Example_Where_Clause">

@@ -3,6 +3,7 @@ package com.q18idc.ssm.service.impl;
 import com.q18idc.ssm.dao.ClassesMapper;
 import com.q18idc.ssm.entity.Classes;
 import com.q18idc.ssm.entity.ClassesExample;
+import com.q18idc.ssm.entity.Student;
 import com.q18idc.ssm.entity.User;
 import com.q18idc.ssm.service.UserService;
 import org.junit.Test;
@@ -22,6 +23,7 @@ public class UserServiceImplTest {
 
     @Autowired
     private ClassesMapper classesMapper;
+
 
     @Test
     public void pageAllUser() {
@@ -49,6 +51,19 @@ public class UserServiceImplTest {
         List<Classes> classes = classesMapper.selectOneToOne(classesExample);
         for (Classes aClass : classes) {
             System.out.println(aClass.getTeacher().getTname());
+        }
+    }
+
+    /**
+     * 一对多查询  查询指定班级下的所有学生
+     */
+    @Test
+    public void OneToMany(){
+        Classes classes1 = new Classes();
+        classes1.setCid(1);
+        Classes classes = classesMapper.selectOneToManyByCid(classes1);
+        for (Student student : classes.getStudents()) {
+            System.out.println(student.getSname());
         }
     }
 }

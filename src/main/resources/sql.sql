@@ -30,3 +30,12 @@ CREATE TABLE `classes` (
   KEY `tid` (`tid`),
   CONSTRAINT `classes_ibfk_1` FOREIGN KEY (`tid`) REFERENCES `teacher` (`tid`) ON DELETE SET NULL ON UPDATE SET NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+
+CREATE TABLE `student` (
+  `sid` int(11) NOT NULL AUTO_INCREMENT,
+  `sname` varchar(255) COLLATE utf8_bin DEFAULT NULL,
+  `cid` int(11) DEFAULT NULL,
+  PRIMARY KEY (`sid`),
+  KEY `cid` (`cid`),
+  CONSTRAINT `student_ibfk_1` FOREIGN KEY (`cid`) REFERENCES `classes` (`cid`) ON DELETE SET NULL ON UPDATE SET NULL
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
