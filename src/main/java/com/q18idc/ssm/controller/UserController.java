@@ -1,9 +1,11 @@
 package com.q18idc.ssm.controller;
 
 import com.github.pagehelper.PageInfo;
+import com.q18idc.ssm.dao.UserMapper;
 import com.q18idc.ssm.entity.*;
 import com.q18idc.ssm.service.UserService;
 import org.hswebframework.expands.office.excel.ExcelIO;
+import org.hswebframework.expands.office.excel.config.Header;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -13,6 +15,10 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.net.URLEncoder;
 import java.util.*;
 
 /**
@@ -26,6 +32,9 @@ public class UserController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private UserMapper userMapper;
 
     /**
      * 用户列表  返回 json
@@ -197,6 +206,43 @@ public class UserController {
 //            success = 0;
 //            error = 0;
             return map;
+        }
+
+    }
+
+    /*
+    * 导出Excel  默认导出全部
+    */
+    @RequestMapping("export")
+    public void  download(HttpServletRequest request, HttpServletResponse response) throws IOException {
+
+        List<Header> headers = new LinkedList<>();
+        List<Object> data = new ArrayList<>();
+        List<User> datas = userMapper.selectByExample(null);
+        for (User user : datas) {
+            data.add(user);
+        }
+
+        headers.add(new Header("用户名","username"));
+        headers.add(new Header("密码","password"));
+        headers.add(new Header("电话","phone"));
+        headers.add(new Header("邮箱","email"));
+        headers.add(new Header("性别","sex"));
+        headers.add(new Header("生日","birthday"));
+
+        String fileName = "测试.xlsx";
+
+        //设置响应头和客户端保存文件名
+        response.setCharacterEncoding("utf-8");
+        response.setContentType("multipart/form-data");
+        response.setHeader("Content-Disposition", "attachment;fileName*=UTF-8''" + URLEncoder.encode(fileName,"UTF-8"));
+        try {
+            OutputStream os = response.getOutputStream();
+            ExcelIO.write(os, headers, data);
+            os.flush();
+            os.close();
+        } catch (Exception e){
+            e.printStackTrace();
         }
 
     }

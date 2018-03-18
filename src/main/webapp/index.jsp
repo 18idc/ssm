@@ -40,8 +40,9 @@
     关键字：<input class="easyui-textbox" type="text" name="key" style="width:150px"/>
     <a href="#" class="easyui-linkbutton" iconCls="icon-search" plain="true" onclick="searchkey()">查询</a>
 
-    <input type="file" id="file" name="file"  />
-    <a href="#" class="easyui-linkbutton" iconCls="icon-save" onclick="fileupload();"  style="margin-right: 18px;">上传</a>
+    <input type="file" id="file" name="file"  class="easyui-linkbutton" />
+    <a href="#" class="easyui-linkbutton" iconCls="icon-save" onclick="fileupload();"  style="margin-right: 18px;">导入</a>
+    <a href="${pageContext.request.contextPath}/user/export" target="_blank" class="easyui-linkbutton" style="margin-right: 18px;">导出</a>
 
 </div>
 
