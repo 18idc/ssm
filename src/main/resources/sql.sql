@@ -1,6 +1,12 @@
 DROP TABLE user;
+DROP TABLE student;
+
+ALTER TABLE teacher DROP FOREIGN KEY teacher_ibfk_1;
+ALTER TABLE classes DROP FOREIGN KEY classes_ibfk_1;
+
 DROP TABLE teacher;
 DROP TABLE classes;
+
 
 CREATE TABLE `user` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -18,8 +24,7 @@ CREATE TABLE `teacher` (
   `tname` varchar(255) COLLATE utf8_bin DEFAULT NULL,
   `cid` int(11) DEFAULT NULL,
   PRIMARY KEY (`tid`),
-  KEY `cid` (`cid`),
-  CONSTRAINT `teacher_ibfk_1` FOREIGN KEY (`cid`) REFERENCES `classes` (`cid`) ON DELETE SET NULL ON UPDATE SET NULL
+  KEY `cid` (`cid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 CREATE TABLE `classes` (
@@ -27,8 +32,7 @@ CREATE TABLE `classes` (
   `cname` varchar(255) COLLATE utf8_bin DEFAULT NULL,
   `tid` int(11) DEFAULT NULL,
   PRIMARY KEY (`cid`),
-  KEY `tid` (`tid`),
-  CONSTRAINT `classes_ibfk_1` FOREIGN KEY (`tid`) REFERENCES `teacher` (`tid`) ON DELETE SET NULL ON UPDATE SET NULL
+  KEY `tid` (`tid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 CREATE TABLE `student` (
@@ -36,6 +40,9 @@ CREATE TABLE `student` (
   `sname` varchar(255) COLLATE utf8_bin DEFAULT NULL,
   `cid` int(11) DEFAULT NULL,
   PRIMARY KEY (`sid`),
-  KEY `cid` (`cid`),
-  CONSTRAINT `student_ibfk_1` FOREIGN KEY (`cid`) REFERENCES `classes` (`cid`) ON DELETE SET NULL ON UPDATE SET NULL
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+  KEY `cid` (`cid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+
+ALTER TABLE teacher ADD CONSTRAINT `teacher_ibfk_1` FOREIGN KEY (`cid`) REFERENCES `classes` (`cid`) ON DELETE SET NULL ON UPDATE SET NULL;
+ALTER TABLE classes ADD CONSTRAINT `classes_ibfk_1` FOREIGN KEY (`tid`) REFERENCES `teacher` (`tid`) ON DELETE SET NULL ON UPDATE SET NULL;
+ALTER TABLE student ADD CONSTRAINT `student_ibfk_1` FOREIGN KEY (`cid`) REFERENCES `classes` (`cid`) ON DELETE SET NULL ON UPDATE SET NULL;
