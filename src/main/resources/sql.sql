@@ -7,7 +7,6 @@ ALTER TABLE classes DROP FOREIGN KEY classes_ibfk_1;
 DROP TABLE teacher;
 DROP TABLE classes;
 
-
 CREATE TABLE `user` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `username` varchar(255) COLLATE utf8_bin DEFAULT NULL,
