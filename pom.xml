@@ -11,7 +11,7 @@
         <!--版本控制-->
 
         <!-- spring版本号 -->
-        <spring.version>4.3.14.RELEASE</spring.version>
+        <spring.version>4.3.18.RELEASE</spring.version>
         <!-- mybatis版本号 -->
         <mybatis.version>3.4.5</mybatis.version>
         <!--mybatis generator 版本号-->
