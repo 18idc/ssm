@@ -7,6 +7,8 @@ import com.q18idc.ssm.dao.UserMapper;
 import com.q18idc.ssm.entity.*;
 import com.q18idc.ssm.service.UserService;
 import com.q18idc.ssm.utils.MyUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,6 +21,7 @@ import java.util.List;
  */
 @Service
 public class UserServiceImpl implements UserService {
+    public static final Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
 
     @Autowired
     private UserMapper userMapper;
@@ -63,6 +66,11 @@ public class UserServiceImpl implements UserService {
             if (MyUtils.isEmpty(key)) {
                 userExample = null;
             }
+
+            logger.debug("查询分页");
+            logger.info("查询分页");
+            logger.warn("查询分页");
+            logger.error("查询分页");
 
             userList = userMapper.selectByExample(userExample);
 

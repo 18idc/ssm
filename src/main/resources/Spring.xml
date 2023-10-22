@@ -36,7 +36,7 @@
         <!-- 配置一个连接在池中最小生存的时间，单位是毫秒 -->
         <property name="minEvictableIdleTimeMillis" value="300000" />
 
-        <property name="validationQuery" value="SELECT id FROM user" />
+        <property name="validationQuery" value="SELECT 1" />
         <property name="testWhileIdle" value="true" />
         <property name="testOnBorrow" value="false" />
         <property name="testOnReturn" value="false" />

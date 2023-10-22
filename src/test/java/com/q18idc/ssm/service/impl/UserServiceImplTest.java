@@ -7,11 +7,9 @@ import com.q18idc.ssm.entity.*;
 import com.q18idc.ssm.service.UserService;
 import org.hswebframework.expands.office.excel.ExcelIO;
 import org.hswebframework.expands.office.excel.config.Header;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
 import java.io.FileOutputStream;
 import java.io.OutputStream;
@@ -19,8 +17,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-@RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration("classpath:Spring.xml")
+@SpringJUnitConfig(locations = "classpath:Spring.xml")
 public class UserServiceImplTest {
 
     @Autowired

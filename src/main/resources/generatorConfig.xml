@@ -14,8 +14,8 @@
             <property name="suppressAllComments" value="true"/>
         </commentGenerator>
         <!--数据库链接URL，用户名、密码 -->
-        <jdbcConnection driverClass="com.mysql.jdbc.Driver"
-                        connectionURL="jdbc:mysql://192.168.99.100:3306/test" userId="root" password="root">
+        <jdbcConnection driverClass="com.mysql.cj.jdbc.Driver"
+                        connectionURL="jdbc:mysql://192.168.1.5:3306/ssm" userId="root" password="root">
         </jdbcConnection>
         <javaTypeResolver>
             <!-- 强制使用 java.math.BigDecimal 类 -->
@@ -39,7 +39,7 @@
         </javaClientGenerator>
 
         <!-- 要生成哪些表 -->
-        <table tableName="groups" domainObjectName="Groups"
+        <table tableName="test" domainObjectName="Test"
                enableCountByExample="true" enableUpdateByExample="true"
                enableDeleteByExample="true" enableSelectByExample="true"
                selectByExampleQueryId="true"/>
