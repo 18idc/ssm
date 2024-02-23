@@ -1,13 +1,24 @@
 package com.q18idc.ssm.controller;
 
+import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.io.FastByteArrayOutputStream;
+import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.io.IoUtil;
+import cn.hutool.core.util.StrUtil;
+import cn.hutool.poi.excel.ExcelReader;
+import cn.hutool.poi.excel.ExcelUtil;
+import cn.hutool.poi.excel.ExcelWriter;
+import com.alibaba.excel.EasyExcel;
+import com.alibaba.excel.util.ListUtils;
+import com.alibaba.excel.write.builder.ExcelWriterBuilder;
 import com.github.pagehelper.PageInfo;
 import com.q18idc.ssm.dao.UserMapper;
 import com.q18idc.ssm.entity.*;
+import com.q18idc.ssm.excel.UserExcelData;
+import com.q18idc.ssm.excel.UserExcelDataListener;
 import com.q18idc.ssm.service.UserService;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.hswebframework.expands.office.excel.ExcelIO;
-import org.hswebframework.expands.office.excel.config.Header;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,13 +27,16 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 /**
  * User控制器
+ *
  * @author q18idc.com QQ993143799
  * Created by q18idc.com QQ993143799 on 2018/2/15
  */
@@ -48,7 +62,7 @@ public class UserController {
         ResultJson json = new ResultJson();
         List<User> list = userService.pageAllUser(user);
         PageInfo<User> info = new PageInfo<User>(list);
-        json.setTotal((int) info.getTotal());
+        json.setTotal((int)info.getTotal());
         json.setRows(info.getList());
         return json;
     }
@@ -97,6 +111,7 @@ public class UserController {
 
     /**
      * 性别统计
+     *
      * @return
      */
     @RequestMapping(value = {"sex"})
@@ -118,11 +133,12 @@ public class UserController {
 
     /**
      * 一对一查询 查询出班级下的老师  假设一个班只能有一个老师来教
+     *
      * @return
      */
     @RequestMapping(value = {"OneToOne"})
     @ResponseBody
-    public List<Classes> OneToOne(){
+    public List<Classes> OneToOne() {
         Classes classes = new Classes();
         classes.setCname("软件");
         return userService.classesOneToOne(classes);
@@ -130,11 +146,12 @@ public class UserController {
 
     /**
      * 一对多查询  查询指定班级下的所有学生
+     *
      * @return
      */
     @RequestMapping(value = {"OneToMany"})
     @ResponseBody
-    public Classes OneToMany(){
+    public Classes OneToMany() {
         Classes classes = new Classes();
         classes.setCid(1);
         return userService.classesOneToMany(classes);
@@ -142,14 +159,15 @@ public class UserController {
 
     /**
      * 多对多查询  根据用户ID获取用户组
+     *
      * @return
      */
     @RequestMapping(value = {"ManyToMany"})
     @ResponseBody
-    public List<Groups> ManyToMany(){
+    public List<Groups> ManyToMany() {
         User user = new User();
         user.setId(1);
-       return userService.selectManyToMany(user);
+        return userService.selectManyToMany(user);
     }
 
     /**
@@ -157,77 +175,62 @@ public class UserController {
      */
     @PostMapping(value = {"upload"})
     @ResponseBody
-    public Map<String ,Object> upload(@RequestParam("file") MultipartFile file) throws Exception {
-        Map<String ,Object> map = new HashMap<>();
+    public Map<String, Object> upload(@RequestParam("file") MultipartFile file) throws Exception {
+        Map<String, Object> map = new HashMap<>();
         int sun = 0;//总条数
         int success = 0;//成功条数
         int error = 0;//失败条数
 
-        //一次遍历所有文件
         if (file != null) {
-            List<Map<String, Object>> list = ExcelIO.read2Map(file.getInputStream());
-            sun = list.size();
-            for (Map<String, Object> stringObjectMap : list) {
-                User user  = new User();
-                user.setUsername(stringObjectMap.get("用户名").toString());
-                user.setPassword(stringObjectMap.get("密码").toString());
-                user.setPhone(stringObjectMap.get("电话").toString());
-                user.setEmail(stringObjectMap.get("邮箱").toString());
-                user.setSex(stringObjectMap.get("性别").toString());
-                user.setBirthday((Date) stringObjectMap.get("生日"));
-                String s = userService.addUpdateUser(user);
-                if(s.indexOf("成功") == -1){
-                    error++;
-                }else {
-                    success++;
-                }
-            }
+            EasyExcel.read(file.getInputStream(), UserExcelData.class, new UserExcelDataListener(userService)).sheet().doRead();
         }
 
-        map.put("flag",true);
-        map.put("msg","总条数：" + sun + " 成功：" + success + "条 失败：" + error + "条");
-//            sun = 0;
-//            success = 0;
-//            error = 0;
+        map.put("flag", true);
+        map.put("msg", "总条数：" + sun + " 成功：" + success + "条 失败：" + error + "条");
+        //            sun = 0;
+        //            success = 0;
+        //            error = 0;
         return map;
 
     }
 
     /*
-    * 导出Excel  默认导出全部
-    */
+     * 导出Excel  默认导出全部
+     */
     @RequestMapping("export")
-    public void  download(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    public void download2(HttpServletResponse response) {
+        List<User> allUserData = userMapper.selectByExample(null);
+        if (allUserData != null && !allUserData.isEmpty()) {
 
-        List<Header> headers = new LinkedList<>();
-        List<Object> data = new ArrayList<>();
-        List<User> datas = userMapper.selectByExample(null);
-        for (User user : datas) {
-            data.add(user);
-        }
+            List<UserExcelData> data = ListUtils.newArrayList();
+            allUserData.forEach(item -> {
+                UserExcelData excelData = new UserExcelData();
+                excelData.setUsername(item.getUsername());
+                excelData.setPassword(item.getPassword());
+                excelData.setPhone(item.getPhone());
+                excelData.setEmail(item.getEmail());
+                excelData.setSex(item.getSex());
+                excelData.setBirthday(item.getBirthday());
+                data.add(excelData);
+            });
 
-        headers.add(new Header("用户名","username"));
-        headers.add(new Header("密码","password"));
-        headers.add(new Header("电话","phone"));
-        headers.add(new Header("邮箱","email"));
-        headers.add(new Header("性别","sex"));
-        headers.add(new Header("生日","birthday"));
+            try {
 
-        String fileName = "测试.xlsx";
+                String fileName = "测试.xlsx";
 
-        //设置响应头和客户端保存文件名
-        response.setCharacterEncoding("utf-8");
-        response.setContentType("multipart/form-data");
-        response.setHeader("Content-Disposition", "attachment;fileName*=UTF-8''" + URLEncoder.encode(fileName,"UTF-8"));
-        try {
-            OutputStream os = response.getOutputStream();
-            ExcelIO.write(os, headers, data);
-            os.flush();
-            os.close();
-        } catch (Exception e){
-            e.printStackTrace();
+                //设置响应头和客户端保存文件名
+                response.setCharacterEncoding("utf-8");
+                response.setContentType("multipart/form-data");
+                response.setContentType("application/vnd.ms-excel;charset=utf-8");
+                response.setHeader("Content-Disposition", "attachment;fileName*=UTF-8''" + URLEncoder.encode(fileName, "UTF-8"));
+
+                EasyExcel.write(response.getOutputStream(), UserExcelData.class).sheet("模板").doWrite(data);
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
         }
 
     }
-
 }

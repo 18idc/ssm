@@ -1,16 +1,19 @@
 package com.q18idc.ssm.service.impl;
 
+import cn.hutool.core.io.FileUtil;
+import com.alibaba.excel.EasyExcel;
+import com.alibaba.excel.util.ListUtils;
 import com.q18idc.ssm.dao.ClassesMapper;
 import com.q18idc.ssm.dao.GroupsMapper;
 import com.q18idc.ssm.dao.UserMapper;
 import com.q18idc.ssm.entity.*;
+import com.q18idc.ssm.excel.UserExcelData;
 import com.q18idc.ssm.service.UserService;
-import org.hswebframework.expands.office.excel.ExcelIO;
-import org.hswebframework.expands.office.excel.config.Header;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
@@ -37,27 +40,22 @@ public class UserServiceImplTest {
      */
     @Test
     public void export(){
-        List<Header> headers = new LinkedList<>();
-        List<Object> data = new ArrayList<>();
-        List<User> datas = userMapper.selectByExample(null);
-        for (User user : datas) {
-            data.add(user);
-        }
-
-        headers.add(new Header("用户名","username"));
-        headers.add(new Header("密码","password"));
-        headers.add(new Header("电话","phone"));
-        headers.add(new Header("邮箱","email"));
-        headers.add(new Header("性别","sex"));
-        headers.add(new Header("生日","birthday"));
-
-         // 简单粗暴的写出
-        try (OutputStream outputStream = new FileOutputStream("target/test_1.xlsx")) {
-            ExcelIO.write(outputStream, headers, data);
-            outputStream.flush();
-        }catch (Exception e){
-            e.printStackTrace();
-        }
+        List<User> allUserData = userMapper.selectByExample(null);
+        List<UserExcelData> data = ListUtils.newArrayList();
+        allUserData.forEach(item -> {
+            UserExcelData excelData = new UserExcelData();
+            excelData.setUsername(item.getUsername());
+            excelData.setPassword(item.getPassword());
+            excelData.setPhone(item.getPhone());
+            excelData.setEmail(item.getEmail());
+            excelData.setSex(item.getSex());
+            excelData.setBirthday(item.getBirthday());
+            data.add(excelData);
+        });
+        File tempFile = FileUtil.createTempFile(".xlsx", true);
+        String absolutePath = tempFile.getAbsolutePath();
+        System.out.println(absolutePath);
+        EasyExcel.write(absolutePath, UserExcelData.class).sheet("模板").doWrite(data);
 
     }
 
